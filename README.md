@@ -26,7 +26,7 @@ The NewsFeed app is a mobile application built using Google Flutter. It allows u
 1. **Clone the Repository**:
     ```sh
     git clone <repository-url>
-    cd newsfeed_app
+    cd news_app
     ```
 
 2. **Install Dependencies**:
