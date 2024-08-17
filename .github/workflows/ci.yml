@@ -76,7 +76,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          profile: sdk gphone64 x86 64
+          profile: Pixel_8_API_35
           target: google_apis
           disable-animations: true
           script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
