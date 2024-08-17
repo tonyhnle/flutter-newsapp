@@ -76,7 +76,7 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          profile: Nexus 6
+          profile: sdk gphone64 x86 64
           target: google_apis
           disable-animations: true
           script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
