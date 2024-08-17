@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         android:
-          - { version: '21', arch: "x86_64" }
-          - { version: '26', arch: "x86_64" }
+          - { version: '29', arch: "x86_64" }
+          - { version: '30', arch: "x86_64" }
           - { version: '34', arch: "x86_64" }
 
     steps:
@@ -26,7 +26,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'
+          flutter-version: '3.22.3'  # Keep your Flutter version here
 
       - name: Install dependencies
         run: flutter pub get
@@ -56,10 +56,7 @@ jobs:
           target: 'google_apis'
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: |
-            cd news_app
-            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --verbose
-
+          script: cd news_app flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
   #   runs-on: macos-latest
 
   #   steps:
