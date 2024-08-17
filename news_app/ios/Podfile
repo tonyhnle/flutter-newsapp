@@ -1,8 +1,35 @@
+# Uncomment this line to define a global platform for your project
 platform :ios, '13.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# If you have issues with the Google Data Transport pod, you can define this in your Podfile
+# and it will lock the version. Workaround for https://github.com/CocoaPods/CocoaPods/issues/10003.
+# pod 'GoogleDataTransport', '~> 8.4'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_install_all_ios_pods(flutter_application_path)
+  require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'flutter_export_environment'), flutter_application_path)
+  require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'pod_helper'), flutter_application_path)
+  flutter_root = File.expand_path(File.join('..', '..'), flutter_application_path)
+  pod 'Flutter', :path => File.join(flutter_root, 'bin', 'cache', 'artifacts', 'engine', 'ios')
+end
 
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
+
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+
+  # Pods for testing
 end

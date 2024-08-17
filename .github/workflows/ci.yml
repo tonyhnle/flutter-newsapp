@@ -10,7 +10,7 @@ on:
       - qa
 
 jobs:
-  test:
+  test_ios:
     runs-on: macos-latest
 
     steps:
@@ -48,4 +48,41 @@ jobs:
 
       - name: Run integration tests on iOS
         run: flutter drive --target=integration_test/app_test.dart -d "iPhone 15 Pro"
+        working-directory: news_app
+
+  test_android:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level:
+          - 35  # Pixel 8 API level
+      fail-fast: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.3'
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+        working-directory: news_app
+
+      - name: Set up Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          profile: Pixel_8
+          disable-animations: true
+
+      - name: Run unit and widget tests
+        run: flutter test
+        working-directory: news_app
+
+      - name: Run integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
         working-directory: news_app
