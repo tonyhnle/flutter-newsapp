@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Android CI
 
 on:
   pull_request:
@@ -10,6 +10,57 @@ on:
       - qa
 
 jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        android:
+          - { version: '21', arch: "x86_64" }
+          - { version: '26', arch: "x86_64" }
+          - { version: '34', arch: "x86_64" }
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.3'  # Keep your Flutter version here
+
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: news_app
+
+      - name: Run unit tests
+        run: flutter test
+        working-directory: news_app
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Create AVD and start emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.android.version }}
+          arch: ${{ matrix.android.arch }}
+          target: 'google_apis'
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+      - name: Run integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+        working-directory: news_app
+
   # test_ios:
   #   runs-on: macos-latest
 
@@ -49,40 +100,3 @@ jobs:
   #     - name: Run integration tests on iOS
   #       run: flutter drive --target=integration_test/app_test.dart -d "iPhone 15 Pro"
   #       working-directory: news_app
-
-
-  android:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level:
-          - 30
-      fail-fast: true
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version: '3.22.3'
-
-      - name: Install dependencies
-        run: flutter pub get
-        working-directory: news_app
-
-      - name: Run unit and widget tests
-        run: flutter test
-        working-directory: news_app
-
-      - name: Set up Android emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          arch: arm64-v8a
-          target: google_apis
-          profile: Nexus 6
-          disable-animations: true
-          script: cd news_app && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
