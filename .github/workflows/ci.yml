@@ -21,19 +21,19 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.0'  # Ensure to use a compatible Flutter version
+          flutter-version: '3.22.3'  # Update to a Flutter version that supports Dart 3.4.4
 
       - name: Install dependencies
         run: flutter pub get
-        working-directory: news_app  # Ensure you're in the correct directory
+        working-directory: news_app
 
       - name: Set up Chrome for integration tests
-        run: sudo apt-get install -y chromium-browser
+        run: sudo apt-get install chromium-browser
 
       - name: Run unit and widget tests
         run: flutter test
         working-directory: news_app
 
-      - name: Run integration tests on Chrome
+      - name: Run integration tests
         run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d chrome
         working-directory: news_app
