@@ -23,17 +23,17 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
-      - name: Change directory to news_app
-        run: cd news_app
-
       - name: Install dependencies
         run: flutter pub get
+        working-directory: news_app
 
       - name: Set up Chrome for integration tests
         run: sudo apt-get install chromium-browser
 
       - name: Run unit and widget tests
         run: flutter test
+        working-directory: news_app
 
       - name: Run integration tests
         run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+        working-directory: news_app
