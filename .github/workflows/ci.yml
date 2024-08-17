@@ -8,15 +8,14 @@ on:
     branches:
       - dev
       - qa
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         android:
-          - { version: '29', arch: "x86_64" }
-          - { version: '30', arch: "x86_64" }
+          - { version: '21', arch: "x86_64" }
+          - { version: '26', arch: "x86_64" }
           - { version: '34', arch: "x86_64" }
 
     steps:
@@ -26,15 +25,17 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'  # Keep your Flutter version here
+          flutter-version: '3.22.3'
 
       - name: Install dependencies
-        run: flutter pub get
-        working-directory: news_app
+        run: |
+          cd news_app
+          flutter pub get
 
       - name: Run unit tests
-        run: flutter test
-        working-directory: news_app
+        run: |
+          cd news_app
+          flutter test
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -56,7 +57,10 @@ jobs:
           target: 'google_apis'
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: cd news_app flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+          script: |
+            cd news_app
+            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --verbose
+
   #   runs-on: macos-latest
 
   #   steps:
