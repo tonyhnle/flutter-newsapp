@@ -82,7 +82,6 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          profile: generic
           target: google_apis
           disable-animations: true
           script: cd news_app && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
