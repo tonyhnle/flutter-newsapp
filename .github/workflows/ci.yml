@@ -55,8 +55,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level:
-          - 34
+        api-level: [21, 23, 29]
       fail-fast: true
 
     steps:
@@ -82,6 +81,6 @@ jobs:
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          target: google_apis
+          target: Nexus 6
           disable-animations: true
           script: cd news_app && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
