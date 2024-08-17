@@ -55,7 +55,7 @@ jobs:
     strategy:
       matrix:
         api-level:
-          - 34  # Change to a different available API level
+          - 35  # Change to a different available API level
       fail-fast: true
 
     steps:
