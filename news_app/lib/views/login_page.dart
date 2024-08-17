@@ -21,7 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
     String username = _usernameController.text;
     if (username.isNotEmpty) {
       // Navigate to HomeScreen with the username
-      Provider.of<PostProvider>(context, listen:false).setCurrentUsername(username);
+      Provider.of<PostProvider>(context, listen: false)
+          .setCurrentUsername(username);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -63,7 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                     alignLabelWithHint: true,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
                   ),
                 ),
               ),
@@ -72,7 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _login,
                 child: Text('Login'),
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.inversePrimary),
+                  backgroundColor: MaterialStateProperty.all(
+                      Theme.of(context).colorScheme.inversePrimary),
                 ),
               ),
             ],

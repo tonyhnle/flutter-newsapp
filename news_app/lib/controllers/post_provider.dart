@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';  // Add this line
 import '../model/post.dart';
 import '../model/comment.dart';
 import '../controllers/firebase_service.dart';

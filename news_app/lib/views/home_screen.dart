@@ -21,13 +21,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<PostProvider>(context, listen: false).setCurrentUsername(widget.username);
+      Provider.of<PostProvider>(context, listen: false)
+          .setCurrentUsername(widget.username);
       Provider.of<PostProvider>(context, listen: false).loadPosts();
     });
   }
+
   void _showAddPostDialog() {
     showDialog(context: context, builder: (context) => AddPostDialog());
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
           if (postProvider.posts.isEmpty) {
             return Center(child: Text('No posts available.'));
           } else {
-            print("Posts available: ${postProvider.posts.length}"); // Debug print
+            print(
+                "Posts available: ${postProvider.posts.length}"); // Debug print
             return ListView.builder(
               itemCount: postProvider.posts.length,
               itemBuilder: (context, index) {

@@ -1,0 +1,36 @@
+name: Flutter CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+  push:
+    branches:
+      - dev
+      - qa
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Set up Chrome for integration tests
+        run: sudo apt-get install chromium-browser
+
+      - name: Run unit and widget tests
+        run: flutter test
+
+      - name: Run integration tests
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
