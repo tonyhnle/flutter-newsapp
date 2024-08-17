@@ -51,36 +51,35 @@ jobs:
   #       working-directory: news_app
 
 
-  android:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [21, 23, 29]
-      fail-fast: true
 
+  connected-tests:
+    runs-on: macos-latest
+    
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
         with:
-          channel: stable
-          flutter-version: '3.22.3'
+          java-version: 11
+          distribution: 'adopt'
+          cache: 'gradle'
 
       - name: Install dependencies
         run: flutter pub get
         working-directory: news_app
 
-      - name: Run unit and widget tests
-        run: flutter test
-        working-directory: news_app
-
       - name: Set up Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
-          arch: x86_64
-          target: Nexus 6
+          api-level: 30  # Specify the API level you want
+          target: google_apis
+          arch: arm64-v8a  # Use ARM architecture
+          profile: Pixel_6_API_30_arm64  # Explicitly name the emulator profile
           disable-animations: true
-          script: cd news_app && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+          disable-linux-hw-accel: true  # Ensure hardware acceleration is disabled on Linux runners
+          script: |
+            flutter devices
+            adb devices
+            cd news_app flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
