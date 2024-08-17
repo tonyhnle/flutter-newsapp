@@ -21,19 +21,25 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'  # Update to a Flutter version that supports Dart 3.4.4
+          flutter-version: '3.22.3'  
 
       - name: Install dependencies
         run: flutter pub get
         working-directory: news_app
 
-      - name: Set up Chrome for integration tests
-        run: sudo apt-get install chromium-browser
-
       - name: Run unit and widget tests
         run: flutter test
         working-directory: news_app
 
-      - name: Run integration tests
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d chrome
+      - name: Set up Android SDK
+        uses: reactivecircus/android-emulator-runner@v2.22.0
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: Pixel_8
+          disable-animations: true
+
+      - name: Run integration tests on Android
+        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
         working-directory: news_app
