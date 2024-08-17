@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         android:
-          - { version: '29', arch: "x86_64" }
-          - { version: '30', arch: "x86_64" }
+          - { version: '21', arch: "x86_64" }
+          - { version: '26', arch: "x86_64" }
           - { version: '34', arch: "x86_64" }
 
     steps:
@@ -26,7 +26,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'  # Keep your Flutter version here
+          flutter-version: '3.22.3'
 
       - name: Install dependencies
         run: flutter pub get
