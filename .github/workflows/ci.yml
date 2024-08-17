@@ -15,8 +15,8 @@ jobs:
     strategy:
       matrix:
         android:
-          - { version: '21', arch: "x86_64" }
-          - { version: '26', arch: "x86_64" }
+          - { version: '29', arch: "x86_64" }
+          - { version: '30', arch: "x86_64" }
           - { version: '34', arch: "x86_64" }
 
     steps:
