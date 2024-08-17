@@ -50,12 +50,13 @@ jobs:
   #       run: flutter drive --target=integration_test/app_test.dart -d "iPhone 15 Pro"
   #       working-directory: news_app
 
+
   android:
     runs-on: macos-latest
     strategy:
       matrix:
         api-level:
-          - 29
+          - 34
       fail-fast: true
 
     steps:
@@ -84,5 +85,4 @@ jobs:
           profile: generic
           target: google_apis
           disable-animations: true
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
-        working-directory: news_app
+          script: cd news_app && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
