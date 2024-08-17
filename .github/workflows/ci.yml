@@ -50,33 +50,39 @@ jobs:
   #       run: flutter drive --target=integration_test/app_test.dart -d "iPhone 15 Pro"
   #       working-directory: news_app
 
-  test_android:
+  android:
     runs-on: macos-latest
     strategy:
       matrix:
         api-level:
-          - 35  # Change to a different available API level
+          - 29
       fail-fast: true
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Flutter SDK
+      - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
+          channel: stable
           flutter-version: '3.22.3'
 
-      - name: Install Flutter dependencies
+      - name: Install dependencies
         run: flutter pub get
         working-directory: news_app
 
-      - name: Set up Android Emulator
+      - name: Run unit and widget tests
+        run: flutter test
+        working-directory: news_app
+
+      - name: Set up Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           arch: x86_64
-          profile: Pixel_8_API_35
+          profile: generic
           target: google_apis
           disable-animations: true
-          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
+          script: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+        working-directory: news_app
