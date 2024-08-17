@@ -23,6 +23,9 @@ jobs:
         with:
           flutter-version: '3.0.0'
 
+      - name: Change directory to news_app
+        run: cd news_app
+
       - name: Install dependencies
         run: flutter pub get
 
