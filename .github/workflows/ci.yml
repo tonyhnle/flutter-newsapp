@@ -10,8 +10,7 @@ on:
       - qa
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  test:
     runs-on: macos-latest
 
     steps:
@@ -25,29 +24,25 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-        working-directory: news_app
 
-      - name: Set up Android SDK
-        uses: reactivecircus/android-emulator-runner@v2.22.0
+      - name: Set up Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          sudo xcodebuild -runFirstLaunch
+
+      - name: Set up iOS simulator
+        uses: futureware-tech/simulator-action@v3
         with:
-          api-level: 35
-          target: google_apis
-          arch: x86_64
-          profile: Pixel_8
-          disable-animations: true
+          model: 'iPhone 14'
+          version: '16.4'
+          disabled: 'true'
 
-      - name: Start emulator
-        run: flutter emulators --launch test
-        working-directory: news_app
-
-      - name: Wait for emulator to boot
-        run: adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-        working-directory: news_app
+      - name: Build iOS
+        run: flutter build ios --no-codesign
 
       - name: Run unit and widget tests
         run: flutter test
-        working-directory: news_app
 
-      - name: Run integration tests
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
-        working-directory: news_app
+      - name: Run integration tests on iOS
+        run: flutter drive --target=integration_test/app_test.dart -d "iPhone 14"
+
