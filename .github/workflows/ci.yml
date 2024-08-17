@@ -21,7 +21,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'  
+          flutter-version: '3.22.3'
 
       - name: Install dependencies
         run: flutter pub get
@@ -39,6 +39,17 @@ jobs:
           arch: x86_64
           profile: Pixel_8
           disable-animations: true
+          disable-linux-hw-accel: true
+
+      - name: Start emulator
+        run: |
+          $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -gpu swiftshader_indirect &
+          flutter emulators --launch test
+        working-directory: news_app
+
+      - name: Wait for emulator to boot
+        run: adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+        working-directory: news_app
 
       - name: Run integration tests on Android
         run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d emulator-5554
