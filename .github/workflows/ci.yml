@@ -26,7 +26,7 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.3'
+          flutter-version: '3.22.3'  # Keep your Flutter version here
 
       - name: Install dependencies
         run: flutter pub get
@@ -47,7 +47,6 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-
       - name: Create AVD and start emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -56,8 +55,7 @@ jobs:
           target: 'google_apis'
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./run_tests.sh
-
+          script: cd news_app flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --verbose
   #   runs-on: macos-latest
 
   #   steps:
