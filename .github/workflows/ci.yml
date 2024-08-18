@@ -56,9 +56,8 @@ jobs:
           target: 'google_apis'
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: |
-           cd news_app 
-           flutter drive --driver=test_driver/main_test.dart --target=integration_test/app_test.dart --verbose
+          script: flutter drive --driver=news_app/test_driver/main_test.dart --target=news_app/integration_test/app_test.dart --verbose
+
   #   runs-on: macos-latest
 
   #   steps:
