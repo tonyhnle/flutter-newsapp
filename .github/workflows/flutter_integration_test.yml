@@ -35,7 +35,7 @@ jobs:
 
     - name: Run Android Integration Tests
       working-directory: news_app
-      run: flutter drive --target=integration_test/app_test.dart --android-emulator
+      run: flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios:
     name: iOS Integration Tests
@@ -69,4 +69,4 @@ jobs:
 
     - name: Run iOS Integration Tests
       working-directory: news_app
-      run: flutter drive --target=integration_test/app_test.dart --ios
+      run: flutter drive --target=test_driver/app_test.dart --ios
