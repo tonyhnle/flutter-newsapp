@@ -12,14 +12,6 @@ jobs:
   android_tests:
     name: Android Integration Tests
     runs-on: macos-13
-    strategy:
-      matrix:
-        api-level:
-          - 33
-
-    defaults:
-      run:
-        working-directory: news_app
 
     steps:
     - name: Checkout code
@@ -31,17 +23,20 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
+      working-directory: news_app
       run: flutter pub get
+
+    - name: Build Android app
+      working-directory: news_app
+      run: flutter build apk --debug
 
     - name: Start Emulator and Run Tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: ${{ matrix.api-level }}
+        api-level: 33
         arch: x86_64
         profile: Nexus 6
-        script: |
-          cd news_app
-          flutter test integration_test/app_test.dart
+        script: flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios_tests:
     name: iOS Integration Tests
@@ -57,18 +52,19 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
+      working-directory: news_app
       run: flutter pub get
 
     - name: Install CocoaPods
+      working-directory: news_app/ios
       run: |
-        cd ios
         sudo gem install cocoapods
         pod install
 
     - name: Build iOS app
+      working-directory: news_app
       run: flutter build ios --debug --no-codesign
 
     - name: Run iOS Simulator and Tests
-      run: flutter emulators --launch apple_ios_simulator
-           flutter drive --target=test_driver/app_test.dart
- 
+      working-directory: news_app
+      run: flutter drive --target=test_driver/app_test.dart
