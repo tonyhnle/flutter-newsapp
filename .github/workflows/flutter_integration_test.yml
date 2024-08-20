@@ -30,10 +30,6 @@ jobs:
       working-directory: news_app
       run: flutter build apk --debug
 
-    - name: Run Android Tests before
-      working-directory: news_app
-      run: flutter test integration_test/app_test.dart
-
     - name: Start Emulator
       uses: reactivecircus/android-emulator-runner@v2
       with:
