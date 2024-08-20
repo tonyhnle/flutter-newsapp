@@ -30,13 +30,25 @@ jobs:
       working-directory: news_app
       run: flutter build apk --debug
 
-    - name: Start Emulator and Run Tests
+    - name: Run Android Tests before
+      working-directory: news_app
+      run: flutter test integration_test/app_test.dart
+
+    - name: Start Emulator
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: 33
         arch: x86_64
         profile: Nexus 6
-        script: flutter drive --target=test_driver/app_test.dart --android-emulator
+        script: flutter emulators --launch Nexus_6
+
+    - name: Run Android Emulator
+      working-directory: news_app
+      run: flutter -v -d your_android_device run
+
+    - name: Run Android Tests
+      working-directory: news_app
+      run: flutter test integration_test/app_test.dart
 
   ios_tests:
     name: iOS Integration Tests
