@@ -26,7 +26,9 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
-      run: flutter pub get
+      run: |
+        cd news_app
+        flutter pub get
 
     - name: Run Android Emulator and Tests
       uses: reactivecircus/android-emulator-runner@v2
@@ -34,7 +36,9 @@ jobs:
         api-level: ${{ matrix.api-level }}
         arch: x86_64
         profile: Nexus 6
-        script: flutter test integration_test/app_test.dart
+        script: |
+          cd news_app
+          flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios:
     name: iOS Integration Tests
@@ -49,18 +53,23 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
-      run: flutter pub get
+      run: |
+        cd news_app
+        flutter pub get
 
     - name: Install CocoaPods
       run: |
-        cd ios
+        cd news_app/ios
         sudo gem install cocoapods
         pod install
 
     - name: Build iOS app
-      run: flutter build ios --debug --no-codesign
+      run: |
+        cd news_app
+        flutter build ios --debug --no-codesign
 
     - name: Run iOS Simulator and Tests
       run: |
+        cd news_app
         flutter emulators --launch apple_ios_simulator
-        flutter test integration_test/app_test.dart
+        flutter drive --target=test_driver/app_test.dart
