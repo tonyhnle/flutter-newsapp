@@ -40,7 +40,8 @@ jobs:
         arch: x86_64
         profile: Nexus 6
         script:
-          cd news_app && flutter build apk --debug --no-codesign
+          cd news_app
+          flutter build apk --debug
           flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios_tests:
