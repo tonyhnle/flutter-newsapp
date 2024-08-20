@@ -41,7 +41,6 @@ jobs:
         profile: Nexus 6
         script: |
           cd news_app
-          flutter build apk --debug
           flutter test integration_test/app_test.dart
 
   ios_tests:
