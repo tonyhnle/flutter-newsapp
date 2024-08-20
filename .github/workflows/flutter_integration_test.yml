@@ -9,8 +9,9 @@ on:
       - qa
 
 jobs:
-  android:
-    runs-on: macos-latest
+  android_tests:
+    name: Android Integration Tests
+    runs-on: macos-11
     strategy:
       matrix:
         api-level:
@@ -18,7 +19,8 @@ jobs:
       fail-fast: true
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Setup Flutter SDK
       uses: subosito/flutter-action@v2
@@ -34,18 +36,19 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: ${{ matrix.api-level }}
-        arch: arm64-v8a  # Use ARM-based image
+        arch: x86_64  # Use x86_64 architecture for compatibility with macos-11
         profile: Nexus 6
         script: |
           cd news_app
           flutter drive --target=test_driver/app_test.dart --android-emulator
 
-  ios:
+  ios_tests:
     name: iOS Integration Tests
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Setup Flutter SDK
       uses: subosito/flutter-action@v2
