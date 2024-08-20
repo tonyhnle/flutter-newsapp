@@ -1,0 +1,78 @@
+name: Flutter Integration Test
+
+on:
+  push:
+    branches:
+      - qa
+  pull_request:
+    branches:
+      - qa
+
+jobs:
+  android_tests:
+    name: Android Integration Tests
+    runs-on: macos-13
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Flutter SDK
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+
+    - name: Install Flutter dependencies
+      working-directory: news_app
+      run: flutter pub get
+
+    - name: Build Android app
+      working-directory: news_app
+      run: flutter build apk --debug
+
+    - name: Start Emulator
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 33
+        arch: x86_64
+        profile: Nexus 6
+        script: flutter emulators --launch Nexus_6
+
+    - name: Run Android Emulator
+      working-directory: news_app
+      run: flutter -v -d your_android_device run
+
+    - name: Run Android Tests
+      working-directory: news_app
+      run: flutter test integration_test/app_test.dart
+
+  ios_tests:
+    name: iOS Integration Tests
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Flutter SDK
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+
+    - name: Install Flutter dependencies
+      working-directory: news_app
+      run: flutter pub get
+
+    - name: Install CocoaPods
+      working-directory: news_app/ios
+      run: |
+        sudo gem install cocoapods
+        pod install
+
+    - name: Build iOS app
+      working-directory: news_app
+      run: flutter build ios --debug --no-codesign
+
+    - name: Run iOS Simulator and Tests
+      working-directory: news_app
+      run: flutter drive --target=test_driver/app_test.dart
