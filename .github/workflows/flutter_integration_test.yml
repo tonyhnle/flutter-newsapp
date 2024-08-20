@@ -21,14 +21,21 @@ jobs:
       with:
         flutter-version: '3.24.0'
 
+    - name: Navigate to project directory
+      working-directory: news_app
+      run: echo "Changed to news_app directory"
+
     - name: Install dependencies
+      working-directory: news_app
       run: flutter pub get
 
     - name: Build Android app
+      working-directory: news_app
       run: flutter build apk --debug
 
     - name: Run Android Integration Tests
-      run: flutter drive --target=news_app/integration_test/app_test.dart --android-emulator
+      working-directory: news_app
+      run: flutter drive --target=integration_test/app_test.dart --android-emulator
 
   ios:
     name: iOS Integration Tests
@@ -42,18 +49,24 @@ jobs:
       with:
         flutter-version: '3.24.0'
 
+    - name: Navigate to project directory
+      working-directory: news_app
+      run: echo "Changed to news_app directory"
+
     - name: Install dependencies
+      working-directory: news_app
       run: flutter pub get
 
     - name: Install CocoaPods
+      working-directory: news_app/ios
       run: |
         sudo gem install cocoapods
-        cd ios
         pod install
-        cd ..
 
     - name: Build iOS app
+      working-directory: news_app
       run: flutter build ios --debug --no-codesign
 
     - name: Run iOS Integration Tests
-      run: flutter drive --target=news_app/integration_test/app_test.dart --ios
+      working-directory: news_app
+      run: flutter drive --target=integration_test/app_test.dart --ios
