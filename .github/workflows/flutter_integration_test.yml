@@ -31,9 +31,7 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
-      run: |
-        cd news_app
-        flutter pub get
+      run: flutter pub get
 
     - name: Run Android Emulator and Tests
       uses: reactivecircus/android-emulator-runner@v2
