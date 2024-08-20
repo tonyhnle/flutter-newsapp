@@ -39,10 +39,8 @@ jobs:
         api-level: ${{ matrix.api-level }}
         arch: x86_64
         profile: Nexus 6
-        disable-animations: true
-        disable-boot-animation: true
-        headless: true  # Optional: runs emulator without a GUI for faster startup
         script:
+          cd news_app && flutter build apk --debug --no-codesign
           flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios_tests:
