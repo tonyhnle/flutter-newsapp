@@ -33,17 +33,16 @@ jobs:
     - name: Install Flutter dependencies
       run: flutter pub get
 
-    - name: Run Android Emulator and Tests
+    - name: Start Emulator and Run Tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: ${{ matrix.api-level }}
-        arch: x86_64  
+        arch: x86_64
         profile: Nexus 6
-        script: |
-          adb wait-for-device  # Wait until the device is ready
-          adb shell getprop sys.boot_completed | grep -m 1 '1'  
-          adb shell input keyevent 82 
-          cd news_app
+        disable-animations: true
+        disable-boot-animation: true
+        headless: true  # Optional: runs emulator without a GUI for faster startup
+        script:
           flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios_tests:
@@ -60,23 +59,18 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
-      run: |
-        cd news_app
-        flutter pub get
+      run: flutter pub get
 
     - name: Install CocoaPods
       run: |
-        cd news_app/ios
+        cd ios
         sudo gem install cocoapods
         pod install
 
     - name: Build iOS app
-      run: |
-        cd news_app
-        flutter build ios --debug --no-codesign
+      run: flutter build ios --debug --no-codesign
 
     - name: Run iOS Simulator and Tests
-      run: |
-        cd news_app
-        flutter emulators --launch apple_ios_simulator
-        flutter drive --target=test_driver/app_test.dart
+      run: flutter emulators --launch apple_ios_simulator
+           flutter drive --target=test_driver/app_test.dart
+ 
