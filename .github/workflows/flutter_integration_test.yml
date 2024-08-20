@@ -35,7 +35,7 @@ jobs:
 
     - name: Run Android Integration Tests
       working-directory: news_app
-      run: flutter test integration_test/app_test.dart
+      run: flutter test integration_test/app_test.dart --android-emulator
 
   ios:
     name: iOS Integration Tests
