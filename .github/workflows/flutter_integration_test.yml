@@ -10,13 +10,8 @@ on:
 
 jobs:
   android:
+    name: Android Integration Tests
     runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level:
-          - 29
-      fail-fast: true
-
     steps:
     - uses: actions/checkout@v3
 
@@ -26,19 +21,15 @@ jobs:
         channel: stable
 
     - name: Install Flutter dependencies
-      run: |
-        cd news_app
-        flutter pub get
+      run: flutter pub get
 
     - name: Run Android Emulator and Tests
       uses: reactivecircus/android-emulator-runner@v2
       with:
-        api-level: ${{ matrix.api-level }}
-        arch: x86_64
+        api-level: 29
+        arch: arm64-v8a
         profile: Nexus 6
-        script: |
-          cd news_app
-          flutter drive --target=test_driver/app_test.dart --android-emulator
+        script: flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios:
     name: iOS Integration Tests
