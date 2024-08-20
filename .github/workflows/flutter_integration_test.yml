@@ -1,0 +1,59 @@
+name: Flutter Integration Test
+
+on:
+  push:
+    branches:
+      - qa
+  pull_request:
+    branches:
+      - qa
+
+jobs:
+  android:
+    name: Android Integration Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.7.0'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Build Android app
+      run: flutter build apk --debug
+
+    - name: Run Android Integration Tests
+      run: flutter drive --target=news_app/integration_test/app_test.dart --android-emulator
+
+  ios:
+    name: iOS Integration Tests
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.7.0'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Install CocoaPods
+      run: |
+        sudo gem install cocoapods
+        cd ios
+        pod install
+        cd ..
+
+    - name: Build iOS app
+      run: flutter build ios --debug --no-codesign
+
+    - name: Run iOS Integration Tests
+      run: flutter drive --target=news_app/integration_test/app_test.dart --ios
