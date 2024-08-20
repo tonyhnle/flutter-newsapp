@@ -11,7 +11,7 @@ on:
 jobs:
   android_tests:
     name: Android Integration Tests
-    runs-on: macos-11  # Switch to Intel-based runner
+    runs-on: macos-latest
     strategy:
       matrix:
         api-level:
@@ -39,7 +39,7 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: ${{ matrix.api-level }}
-        arch: x86_64  # Use x86_64 architecture for compatibility with macos-11
+        arch: x86_64  
         profile: Nexus 6
         script: |
           adb wait-for-device shell getprop sys.boot_completed 1>/dev/null;
