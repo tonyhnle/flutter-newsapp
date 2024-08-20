@@ -34,7 +34,7 @@ jobs:
         api-level: ${{ matrix.api-level }}
         arch: x86_64
         profile: Nexus 6
-        script: flutter drive --target=test_driver/app_test.dart --android-emulator
+        script: flutter test integration_test/app_test.dart
 
   ios:
     name: iOS Integration Tests
@@ -63,4 +63,4 @@ jobs:
     - name: Run iOS Simulator and Tests
       run: |
         flutter emulators --launch apple_ios_simulator
-        flutter drive --target=test_driver/app_test.dart
+        flutter test integration_test/app_test.dart
