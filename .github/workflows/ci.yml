@@ -12,6 +12,13 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        android:
+          - { version: '29', arch: "x86_64" }
+          - { version: '30', arch: "x86_64" }
+          - { version: '34', arch: "x86_64" }
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -42,18 +49,27 @@ jobs:
         env:
           ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL: 60
         with:
-          api-level: 29
+          api-level: ${{ matrix.android.version }}
+          arch: ${{ matrix.android.arch }}
           target: 'google_apis'
-          arch: x86_64
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: |
-            adb wait-for-device shell getprop init.svc.bootanim | grep stopped
-            adb shell input keyevent 82
-            cd news_app
-            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --verbose | tee test_logs.txt
+            # Verify the current directory
+            echo "Current directory:"
+            pwd
+            echo "Directory contents:"
+            ls -la
+
+            # Check for the existence of pubspec.yaml
+            if [ -f pubspec.yaml ]; then
+              echo "Found pubspec.yaml, running tests..."
+              flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart --verbose | tee test_logs.txt
+            else
+              echo "pubspec.yaml not found in the current directory. Please check the path."
+              exit 1
+            fi
 
       - name: Display Test Logs
         run: cat test_logs.txt
         working-directory: news_app
-
