@@ -11,12 +11,15 @@ on:
 jobs:
   android_tests:
     name: Android Integration Tests
-    runs-on: macos-latest  # Using latest macOS runner, which may be ARM-based
+    runs-on: macos-11  # Switch to Intel-based runner
     strategy:
       matrix:
         api-level:
           - 29
-      fail-fast: true
+
+    defaults:
+      run:
+        working-directory: news_app
 
     steps:
     - name: Checkout code
@@ -36,10 +39,10 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2
       with:
         api-level: ${{ matrix.api-level }}
-        arch: arm64-v8a  # Use ARM architecture for Apple Silicon compatibility
+        arch: x86_64  # Use x86_64 architecture for compatibility with macos-11
         profile: Nexus 6
         script: |
-          adb wait-for-device shell getprop sys.boot_completed 1>/dev/null;  # Ensure emulator is fully booted
+          adb wait-for-device shell getprop sys.boot_completed 1>/dev/null;
           cd news_app
           flutter drive --target=test_driver/app_test.dart --android-emulator
 
