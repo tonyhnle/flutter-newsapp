@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         api-level:
-          - 29  # Specify the API level(s) you want to test on
+          - 29
       fail-fast: true
 
     steps:
@@ -43,12 +43,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Flutter
+    - name: Setup Flutter SDK
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.24.0'
+        channel: stable
 
-    - name: Install dependencies
+    - name: Install Flutter dependencies
       run: flutter pub get
 
     - name: Install CocoaPods
@@ -60,5 +60,7 @@ jobs:
     - name: Build iOS app
       run: flutter build ios --debug --no-codesign
 
-    - name: Run iOS Integration Tests
-      run: flutter drive --target=test_driver/app_test.dart --ios
+    - name: Run iOS Simulator and Tests
+      run: |
+        flutter emulators --launch apple_ios_simulator
+        flutter drive --target=test_driver/app_test.dart
