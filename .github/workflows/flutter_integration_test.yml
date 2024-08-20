@@ -11,7 +11,7 @@ on:
 jobs:
   android_tests:
     name: Android Integration Tests
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       matrix:
         api-level:
@@ -39,10 +39,7 @@ jobs:
         api-level: ${{ matrix.api-level }}
         arch: x86_64  
         profile: Nexus 6
-        script: |
-          adb wait-for-device shell getprop sys.boot_completed 1>/dev/null;
-          cd news_app
-          flutter drive --target=test_driver/app_test.dart --android-emulator
+        script: flutter drive --target=test_driver/app_test.dart --android-emulator
 
   ios_tests:
     name: iOS Integration Tests
