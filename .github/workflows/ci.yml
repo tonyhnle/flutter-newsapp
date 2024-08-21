@@ -2,11 +2,6 @@ name: Unit Testing With Coverage
 
 on:
   pull_request:
-    types: # 3️⃣
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review  
     branches:
       - dev2
   push:
