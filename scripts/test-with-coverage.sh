@@ -8,9 +8,6 @@ PACKAGE_NAME=$3
 PACKAGE_LCOV_INFO_PATH=$PROJECT_ROOT_PATH/coverage/lcov_$PACKAGE_NAME.info
 PACKAGE_TEST_REPORT_PATH=$PROJECT_ROOT_PATH/test_reports/${PACKAGE_NAME}_test_report.json
 
-# Create necessary directories
-mkdir -p $PROJECT_ROOT_PATH/coverage/
-mkdir -p $PROJECT_ROOT_PATH/test_reports/
 # Print variables for debugging
 echo "PROJECT_ROOT_PATH: $PROJECT_ROOT_PATH"
 echo "PACKAGE_LCOV_INFO_PATH: $PACKAGE_LCOV_INFO_PATH"
