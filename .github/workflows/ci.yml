@@ -9,11 +9,6 @@ on:
       - ready_for_review  
     branches:
       - dev2
-    paths-ignore: 
-    - '**.md'
-    - 'doc/**'
-    - '.git/'
-    - '.vscode/'
   push:
     branches:
       - qa2
