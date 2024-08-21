@@ -37,9 +37,10 @@ jobs:
 
       - name: Set execute permission on combine-coverage.sh
         run: chmod +x scripts/combine-coverage.sh
-      
+            
       - name: 🧪 Run tests with coverage
-        run: ./scripts/test-with-coverage.sh ${GITHUB_WORKSPACE} ${GITHUB_WORKSPACE}/news_app news_app
+        run: ./scripts/test-with-coverage.sh $(dirname ${GITHUB_WORKSPACE}) ${GITHUB_WORKSPACE}/news_app news_app
+
 
       
       - name: 🧪 Combine coverage reports
