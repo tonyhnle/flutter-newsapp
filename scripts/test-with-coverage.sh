@@ -18,6 +18,18 @@ echo "PACKAGE_TEST_REPORT_PATH: $PACKAGE_TEST_REPORT_PATH"
 # Change to the package directory
 cd $PACKAGE_PATH || exit
 
+# Check if the test directory exists
+if [ ! -d "test" ]; then
+  echo "Error: Test directory 'test' not found in $PACKAGE_PATH."
+  echo "Directory contents:"
+  ls -la
+  exit 1
+fi
+
+# List contents of the test directory for debugging
+echo "Test directory contents:"
+ls -la test
+
 # Run tests with coverage
 flutter test \
   --no-pub \
