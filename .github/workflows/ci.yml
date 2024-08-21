@@ -1,36 +1,59 @@
-name: Flutter CI
+name: Unit Testing With Coverage
 
 on:
   pull_request:
+    types: # 3️⃣
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review  
     branches:
-      - dev
+      - dev2
+    paths-ignore: 
+    - '**.md'
+    - 'doc/**'
+    - '.git/'
+    - '.vscode/'
   push:
     branches:
-      - dev
-      - qa
+      - qa2
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  coverage:
+    name: 🧪 Test
     runs-on: ubuntu-latest
-
+    timeout-minutes: 30
     steps:
-      - name: Checkout code
+      - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
-
-      - name: Set up Flutter
+      - name: ⚙️ Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install lcov
+      - name: ⚙️ Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.0.0'
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Set up Chrome for integration tests
-        run: sudo apt-get install chromium-browser
-
-      - name: Run unit and widget tests
-        run: flutter test
-
-      - name: Run integration tests
-        run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+          channel: 'stable'
+          cache: true
+      - name: ⚙️ Setup Melos
+        uses: bluefireteam/melos-action@v2
+      - name: ⚙️ Install dependencies for all packages
+        run: melos build:pub_get:all
+      - name: 🧪 Run tests with coverage
+        run: melos test:with-lcov-coverage:all
+      - name: 🧪✅❌ Publish test results
+        id: compute_test_results
+        uses: dorny/test-reporter@v1.6.0
+        with:
+          name: '🧪📊 Unit tests report'
+          path: test_reports/*_test_report.json
+          reporter: 'flutter-json'
+          max-annotations: '50'
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🧪📊 Publish coverage report
+        if: github.event_name == 'pull_request'
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: coverage_report/cleaned_combined_lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Coverage Report'
