@@ -8,6 +8,7 @@ on:
     branches:
       - dev
       - qa
+      - unit-test
 
 jobs:
   build-and-test:
