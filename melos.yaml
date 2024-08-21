@@ -1,0 +1,80 @@
+name: flutter_ci_cd_demo
+
+packages:
+  - news_app
+
+scripts:
+  ###############################################
+  ##             QUALITY COMMANDS              ##
+  ###############################################
+  quality:analyze:
+    exec: |
+      flutter analyze --no-fatal-infos --no-fatal-warnings && \
+      flutter pub run dart_code_metrics:metrics analyze --no-fatal-warnings . && \
+      flutter format .
+    select-package:
+      dir-exists:
+        - lib
+    description: |
+      Run Flutter static analysis checks and format
+      Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+  quality:analyze:all:
+    run: melos run --no-select quality:analyze
+    description: |
+      Run Flutter static analysis checks and format all packages
+      Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+  quality:dcm-checks:
+    exec: |
+      flutter pub run dart_code_metrics:metrics check-unnecessary-nullable --no-fatal-found . && \
+      flutter pub run dart_code_metrics:metrics check-unused-code --no-fatal-unused --exclude "{**.g.dart,**.gen.dart,**.freezed.dart}" . && \
+      flutter pub run dart_code_metrics:metrics check-unused-files --no-fatal-unused . && \
+      flutter pub run dart_code_metrics:metrics check-unused-l10n --no-fatal-unused .
+    select-package:
+      dir-exists:
+        - lib
+    description: Run Dart Code Metrics (DCM) extended checks
+
+  quality:dcm-checks:all:
+    run: melos run --no-select quality:dcm-checks
+    description: Run Dart Code Metrics (DCM) extended checks on all packages
+
+  ###############################################
+  ##              TEST COMMANDS                ##
+  ###############################################
+  test:
+    run: flutter test --no-pub --reporter compact
+    exec:
+      concurrency: 6
+    select-package:
+      dir-exists:
+        - test
+    description: Run `flutter test` for a specific package.
+
+  test:all:
+    run: melos run test --no-select
+    description: Run all Flutter tests in this project.
+
+  test:with-lcov-coverage:
+    run: MELOS_ROOT_PATH/scripts/test-with-coverage.sh MELOS_ROOT_PATH MELOS_PACKAGE_PATH MELOS_PACKAGE_NAME
+    exec:
+      concurrency: 6
+    select-package:
+      dir-exists:
+        - test
+    description: Run Flutter tests and publish local lcov coverage for a specific package
+
+  test:with-lcov-coverage:all:
+    run: |
+      melos run test:with-lcov-coverage --no-select && \
+      melos run test:combine-coverage
+    description: Run Flutter tests for all packages and generate a combined lcov coverage report
+
+  test:combine-coverage:
+    run: MELOS_ROOT_PATH/scripts/combine-coverage.sh MELOS_ROOT_PATH
+    description: Combine individual lcov coverage into a single lcov coverage file
+
+environment:
+  sdk: '>=2.19.0 <3.0.0'
+  flutter: ">=3.7.0 <4.0.0"
