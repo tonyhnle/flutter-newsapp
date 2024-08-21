@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - qa2
+      - dev2
 
 jobs:
   coverage:
