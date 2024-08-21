@@ -39,7 +39,7 @@ jobs:
         run: chmod +x scripts/combine-coverage.sh
       
       - name: 🧪 Run tests with coverage
-        run: ./scripts/test-with-coverage.sh $PWD/news_app $PWD/news_app news_app
+        run: ./scripts/test-with-coverage.sh $PWD $PWD/news_app 
 
       
       - name: 🧪 Combine coverage reports
