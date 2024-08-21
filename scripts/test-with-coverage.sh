@@ -5,8 +5,9 @@ PROJECT_ROOT_PATH=$1
 PACKAGE_PATH=$2
 PACKAGE_NAME=$3  
 
-PACKAGE_LCOV_INFO_PATH=$PROJECT_ROOT_PATH/coverage/lcov_$PACKAGE_NAME.info
-PACKAGE_TEST_REPORT_PATH=$PROJECT_ROOT_PATH/test_reports/${PACKAGE_NAME}_test_report.json
+# Correct the paths to point to the root-level coverage and test_reports directories
+PACKAGE_LCOV_INFO_PATH=$PROJECT_ROOT_PATH/../coverage/lcov_$PACKAGE_NAME.info
+PACKAGE_TEST_REPORT_PATH=$PROJECT_ROOT_PATH/../test_reports/${PACKAGE_NAME}_test_report.json
 
 # Print variables for debugging
 echo "PROJECT_ROOT_PATH: $PROJECT_ROOT_PATH"
@@ -14,6 +15,7 @@ echo "PACKAGE_PATH: $PACKAGE_PATH"
 echo "PACKAGE_NAME: $PACKAGE_NAME"
 echo "PACKAGE_LCOV_INFO_PATH: $PACKAGE_LCOV_INFO_PATH"
 echo "PACKAGE_TEST_REPORT_PATH: $PACKAGE_TEST_REPORT_PATH"
+
 
 # Check if PACKAGE_PATH exists and is a directory
 if [ ! -d "$PACKAGE_PATH" ]; then
