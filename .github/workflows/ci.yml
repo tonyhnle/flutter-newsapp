@@ -2,11 +2,15 @@ name: Unit Testing With Coverage
 
 on:
   pull_request:
-    branches:
-      - dev2
+    types:
+      - opened
+      - edited
+      - synchronize
+
   push:
     branches:
       - qa2
+      - dev2
 
 jobs:
   coverage:
@@ -27,8 +31,10 @@ jobs:
           cache: true
       - name: ⚙️ Setup Melos
         uses: bluefireteam/melos-action@v2
-      - name: ⚙️ Install dependencies for all packages
-        run: melos build:pub_get:all
+      - name: Set execute permission on test-with-coverage.sh
+        run: chmod +x scripts/test-with-coverage.sh
+      - name: Set execute permission on combine-coverage.sh
+        run: chmod +x scripts/combine-coverage.sh
       - name: 🧪 Run tests with coverage
         run: melos test:with-lcov-coverage:all
       - name: 🧪✅❌ Publish test results
@@ -48,4 +54,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           title: 'Coverage Report'
 
-          #test
+          
