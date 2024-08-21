@@ -15,12 +15,19 @@ echo "PACKAGE_NAME: $PACKAGE_NAME"
 echo "PACKAGE_LCOV_INFO_PATH: $PACKAGE_LCOV_INFO_PATH"
 echo "PACKAGE_TEST_REPORT_PATH: $PACKAGE_TEST_REPORT_PATH"
 
+# Check if PACKAGE_PATH exists and is a directory
+if [ ! -d "$PACKAGE_PATH" ]; then
+  echo "Error: Package path $PACKAGE_PATH does not exist."
+  exit 1
+fi
+
 # Change to the package directory
-cd $PACKAGE_PATH || exit
+cd "$PACKAGE_PATH" || exit
+echo "Changed directory to: $(pwd)"
 
 # Check if the test directory exists
 if [ ! -d "test" ]; then
-  echo "Error: Test directory 'test' not found in $PACKAGE_PATH."
+  echo "Error: Test directory 'test' not found in $(pwd)."
   echo "Directory contents:"
   ls -la
   exit 1
@@ -35,7 +42,7 @@ flutter test \
   --no-pub \
   --machine \
   --coverage \
-  --coverage-path $PACKAGE_LCOV_INFO_PATH > $PACKAGE_TEST_REPORT_PATH
+  --coverage-path "$PACKAGE_LCOV_INFO_PATH" > "$PACKAGE_TEST_REPORT_PATH"
 
 # Check if the coverage file was created
 if [ ! -f "$PACKAGE_LCOV_INFO_PATH" ]; then
@@ -43,11 +50,11 @@ if [ ! -f "$PACKAGE_LCOV_INFO_PATH" ]; then
   exit 1
 fi
 
-escapedPath="$(echo $PACKAGE_PATH | sed 's/\//\\\//g')"
+escapedPath="$(echo "$PACKAGE_PATH" | sed 's/\//\\\//g')"
 
 # Adjust paths in the coverage file
 if [[ "$OSTYPE" =~ ^darwin ]]; then
-  gsed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
+  gsed -i "s/^SF:lib/SF:$escapedPath\/lib/g" "$PACKAGE_LCOV_INFO_PATH"
 else
-  sed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
+  sed -i "s/^SF:lib/SF:$escapedPath\/lib/g" "$PACKAGE_LCOV_INFO_PATH"
 fi
