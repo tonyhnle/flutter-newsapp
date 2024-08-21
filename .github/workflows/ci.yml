@@ -2,10 +2,8 @@ name: Unit Testing With Coverage
 
 on:
   pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
+    branches:
+      - qa2
 
   push:
     branches:
@@ -53,5 +51,3 @@ jobs:
           lcov-file: coverage_report/cleaned_combined_lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
           title: 'Coverage Report'
-
-          
