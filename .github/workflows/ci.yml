@@ -20,32 +20,23 @@ jobs:
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
-      
       - name: ⚙️ Install lcov
         run: |
           sudo apt-get update
           sudo apt-get -y install lcov
-      
       - name: ⚙️ Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
-      
+      - name: ⚙️ Setup Melos
+        uses: bluefireteam/melos-action@v2
       - name: Set execute permission on test-with-coverage.sh
         run: chmod +x scripts/test-with-coverage.sh
-
       - name: Set execute permission on combine-coverage.sh
         run: chmod +x scripts/combine-coverage.sh
-            
       - name: 🧪 Run tests with coverage
-        run: ./scripts/test-with-coverage.sh $(dirname ${GITHUB_WORKSPACE}) ${GITHUB_WORKSPACE}/news_app news_app
-
-
-      
-      - name: 🧪 Combine coverage reports
-        run: ./scripts/combine-coverage.sh $PWD
-      
+        run: melos test:with-lcov-coverage:all
       - name: 🧪✅❌ Publish test results
         id: compute_test_results
         uses: dorny/test-reporter@v1.6.0
@@ -55,7 +46,6 @@ jobs:
           reporter: 'flutter-json'
           max-annotations: '50'
           token: ${{ secrets.GITHUB_TOKEN }}
-      
       - name: 🧪📊 Publish coverage report
         if: github.event_name == 'pull_request'
         uses: romeovs/lcov-reporter-action@v0.3.1
