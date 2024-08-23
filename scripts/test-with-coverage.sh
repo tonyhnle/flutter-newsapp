@@ -8,7 +8,7 @@ PACKAGE_NAME=$3
 PACKAGE_LCOV_INFO_PATH=$PROJECT_ROOT_PATH/coverage/lcov_$PACKAGE_NAME.info
 PACKAGE_TEST_REPORT_PATH=$PROJECT_ROOT_PATH/test_reports/${PACKAGE_NAME}_test_report.json
 
-# Debug: Print variables for debugging
+# Print variables for debugging
 echo "PROJECT_ROOT_PATH: $PROJECT_ROOT_PATH"
 echo "PACKAGE_PATH: $PACKAGE_PATH"
 echo "PACKAGE_NAME: $PACKAGE_NAME"
@@ -35,10 +35,4 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
   gsed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
 else
   sed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
-fi
-
-# Debug: Check if the adjusted coverage file exists
-if [ ! -f "$PACKAGE_LCOV_INFO_PATH" ]; then
-  echo "Error: Adjusted coverage file not found."
-  exit 1
 fi
