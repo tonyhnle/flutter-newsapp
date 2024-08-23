@@ -1,0 +1,45 @@
+name: Android Integration Test on macOS 13
+
+on:
+  push:
+    branches:
+      - main
+      - qa
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  android-test:
+    runs-on: macos-13
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17 (Temurin)
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Install Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+
+    - name: Install Dependencies
+      run: flutter pub get
+
+    - name: Run Android Emulator and run tests
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 30
+        target: google_apis
+        arch: x86_64
+        profile: Nexus 6P
+        avd-name: test
+        emulator-options: "-no-window -no-audio -no-boot-anim"
+        script: |
+          cd news_app
+          flutter test integration_test/app_test.dart
